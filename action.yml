@@ -1,0 +1,38 @@
+name: 'dotnet-nuget-package-build-github-action'
+description: '.NET NuGet package build & publish GitHub action'
+inputs:
+  configuration:
+    description: >
+      Select the target configuration to build.
+    required: false
+    default: 'Debug'
+  output:
+    description: >
+      Specify the output destination of the built package.
+      By default, $RUNNER_TEMP is set.
+    required: false
+    default: ${{ runner.temp }}
+  publish:
+    description: >
+      Specify `true` if the package is to be delivered after build.
+      By default, `false` is specified and only build is performed.
+    required: false
+    default: false
+  source:
+    description: >
+      Specifies the name of the package source to which the NuGet package is to be delivered when delivering a NuGet package.
+      Must be specified if `publish` is set to `true`.
+    required: false
+    default: ''
+  api-key:
+    description: >
+      Specify the API key to be used for delivery.
+      By default, $GITHUB_TOKEN is used.
+    required: false
+    default: ${{ github.token }}
+runs:
+  using: 'node16'
+  main: 'dist/index.js'
+branding:
+  icon: "upload-cloud"
+  color: "orange"
