@@ -7,6 +7,12 @@ async function Run(): Promise<void>
 	try {
 		const builder = new ArgumentBuilder()
 			.Append('build')
+
+		if (!!core.getInput('project')) {
+			builder.Append(core.getInput('project'))
+		}
+
+		builder
 			.Append('--configuration', core.getInput('configuration'))
 			.Append('--output', core.getInput('output'))
 

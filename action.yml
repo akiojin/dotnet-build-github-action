@@ -12,6 +12,11 @@ inputs:
       By default, $RUNNER_TEMP is set.
     required: false
     default: ${{ runner.temp }}
+  project:
+    description: >
+      Specify the project path.
+    required: false
+    default: ''
   publish:
     description: >
       Specify `true` if the package is to be delivered after build.

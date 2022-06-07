@@ -2978,7 +2978,11 @@ const argument_builder_1 = __nccwpck_require__(883);
 async function Run() {
     try {
         const builder = new argument_builder_1.ArgumentBuilder()
-            .Append('build')
+            .Append('build');
+        if (!!core.getInput('project')) {
+            builder.Append(core.getInput('project'));
+        }
+        builder
             .Append('--configuration', core.getInput('configuration'))
             .Append('--output', core.getInput('output'));
         await exec.exec('dotnet', builder.Build());
