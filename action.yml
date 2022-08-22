@@ -9,9 +9,9 @@ inputs:
   output:
     description: >
       Specify the output destination of the built package.
-      By default, $RUNNER_TEMP is set.
+      By default, '' is set.
     required: false
-    default: ${{ runner.temp }}
+    default: ''
   project:
     description: >
       Specify the project path.

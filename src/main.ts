@@ -12,9 +12,11 @@ async function Run(): Promise<void>
 			builder.Append(core.getInput('project'))
 		}
 
-		builder
-			.Append('--configuration', core.getInput('configuration'))
-			.Append('--output', core.getInput('output'))
+		builder.Append('--configuration', core.getInput('configuration'))
+
+		if (!!core.getInput('output')) {
+			builder.Append('--output', core.getInput('output'))
+		}
 
 		await exec.exec('dotnet', builder.Build())
 	} catch (ex: any) {
