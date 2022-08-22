@@ -3439,16 +3439,33 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(508));
 const exec = __importStar(__nccwpck_require__(13));
 const argument_builder_1 = __nccwpck_require__(531);
+async function Clean(configuration, output) {
+    const builder = new argument_builder_1.ArgumentBuilder()
+        .Append('clean')
+        .Append('--configuration', configuration);
+    if (core.getBooleanInput('nologo')) {
+        builder.Append('--nologo');
+    }
+    if (!!output) {
+        builder.Append('--output', output);
+    }
+    await exec.exec('dotnet', builder.Build());
+}
 async function Run() {
     try {
+        const configuration = core.getInput('configuration');
+        const output = core.getInput('output');
+        if (!!core.getBooleanInput('clean')) {
+            await Clean(configuration, output);
+        }
         const builder = new argument_builder_1.ArgumentBuilder()
-            .Append('build');
+            .Append('build')
+            .Append('--configuration', configuration);
         if (!!core.getInput('project')) {
             builder.Append(core.getInput('project'));
         }
-        builder.Append('--configuration', core.getInput('configuration'));
-        if (!!core.getInput('output')) {
-            builder.Append('--output', core.getInput('output'));
+        if (!!output) {
+            builder.Append('--output', output);
         }
         await exec.exec('dotnet', builder.Build());
     }

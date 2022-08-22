@@ -1,6 +1,16 @@
 name: 'dotnet-nuget-package-build-github-action'
 description: '.NET NuGet package build & publish GitHub action'
 inputs:
+  clean:
+    description: >
+      Clean workspace before building
+    required: false
+    default: false
+  nologo:
+    description: >
+      No copyright information is displayed.
+    required: false
+    default: true
   configuration:
     description: >
       Select the target configuration to build.
