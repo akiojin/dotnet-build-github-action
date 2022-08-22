@@ -3449,7 +3449,9 @@ async function Clean(configuration, output) {
     if (!!output) {
         builder.Append('--output', output);
     }
+    core.startGroup('Run dotnet clean');
     await exec.exec('dotnet', builder.Build());
+    core.endGroup();
 }
 async function Run() {
     try {
@@ -3467,7 +3469,9 @@ async function Run() {
         if (!!output) {
             builder.Append('--output', output);
         }
+        core.startGroup('Run dotnet build');
         await exec.exec('dotnet', builder.Build());
+        core.endGroup();
     }
     catch (ex) {
         core.setFailed(ex.message);

@@ -18,7 +18,9 @@ async function Clean(
 		builder.Append('--output', output)
 	}
 
+    core.startGroup('Run dotnet clean')
 	await exec.exec('dotnet', builder.Build())
+	core.endGroup()
 }
 
 async function Run(): Promise<void> 
@@ -43,7 +45,9 @@ async function Run(): Promise<void>
 			builder.Append('--output', output)
 		}
 
+		core.startGroup('Run dotnet build')
 		await exec.exec('dotnet', builder.Build())
+		core.endGroup()
 	} catch (ex: any) {
 		core.setFailed(ex.message);
 	}
