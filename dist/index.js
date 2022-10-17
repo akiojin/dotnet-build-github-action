@@ -4153,7 +4153,7 @@ async function Publish(configuration, source, apiKey, output) {
         .Append(nupkg)
         .Append('--source', `${source}`)
         .Append('--api-key', apiKey);
-    core.startGroup('Run dotnet build');
+    core.startGroup('Run dotnet nuget push');
     await exec.exec('dotnet', builder.Build());
     core.endGroup();
 }
