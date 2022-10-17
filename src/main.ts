@@ -1,5 +1,6 @@
 import * as core from '@actions/core'
 import * as exec from '@actions/exec'
+import path from 'path'
 import { ArgumentBuilder } from '@akiojin/argument-builder'
 
 async function Clean(
@@ -23,6 +24,51 @@ async function Clean(
 	core.endGroup()
 }
 
+async function Build(
+	configuration: string,
+	output: string): Promise<void>
+{
+	const builder = new ArgumentBuilder()
+		.Append('build')
+		.Append('--configuration', configuration)
+
+	if (!!core.getInput('project')) {
+		builder.Append(core.getInput('project'))
+	}
+
+	if (!!output) {
+		builder.Append('--output', output)
+	}
+
+	core.startGroup('Run dotnet build')
+	await exec.exec('dotnet', builder.Build())
+	core.endGroup()
+}
+
+async function Publish(
+	configuration: string,
+	source: string,
+	apiKey: string,
+	output: string): Promise<void>
+{
+	var nupkg = ''
+	if (!!output) {
+		nupkg = path.join(output, '*.nupkg')
+	} else {
+		nupkg = path.join('**', configuration, '*.nupkg')
+	}
+
+	const builder = new ArgumentBuilder()
+		.Append('nuget', 'push')
+		.Append(nupkg)
+		.Append('--source', `${source}`)
+		.Append('--api-key', apiKey)
+
+	core.startGroup('Run dotnet build')
+	await exec.exec('dotnet', builder.Build())
+	core.endGroup()
+}
+
 async function Run(): Promise<void> 
 {
 	try {
@@ -33,21 +79,11 @@ async function Run(): Promise<void>
 			await Clean(configuration, output)
 		}
 
-		const builder = new ArgumentBuilder()
-			.Append('build')
-			.Append('--configuration', configuration)
+		await Build(configuration, output)
 
-		if (!!core.getInput('project')) {
-			builder.Append(core.getInput('project'))
+		if (!!core.getBooleanInput('publish')) {
+			await Publish(configuration, core.getInput('source'), core.getInput('api-key'), output)
 		}
-
-		if (!!output) {
-			builder.Append('--output', output)
-		}
-
-		core.startGroup('Run dotnet build')
-		await exec.exec('dotnet', builder.Build())
-		core.endGroup()
 	} catch (ex: any) {
 		core.setFailed(ex.message);
 	}

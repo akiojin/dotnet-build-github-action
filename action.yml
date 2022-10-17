@@ -1,6 +1,12 @@
 name: 'dotnet-nuget-package-build-github-action'
 description: '.NET NuGet package build & publish GitHub action'
 inputs:
+  api-key:
+    description: >
+      Specify the API key to be used for delivery.
+      By default, $GITHUB_TOKEN is used.
+    required: false
+    default: ${{ github.token }}
   clean:
     description: >
       Clean workspace before building
@@ -25,6 +31,18 @@ inputs:
   project:
     description: >
       Specify the project path.
+    required: false
+    default: ''
+  publish:
+    description: >
+      Specify `true` if the package is to be delivered after build.
+      By default, `false` is specified and only build is performed.
+    required: false
+    default: false
+  source:
+    description: >
+      Specifies the name of the package source to which the NuGet package is to be delivered when delivering a NuGet package.
+      Must be specified if `publish` is set to `true`.
     required: false
     default: ''
 runs:
