@@ -1,4 +1,4 @@
-name: 'dotnet-nuget-package-build-github-action'
+name: '.NET NuGet package build'
 description: '.NET NuGet package build & publish GitHub action'
 inputs:
   api-key:
