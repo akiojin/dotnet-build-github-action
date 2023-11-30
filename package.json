@@ -1,6 +1,6 @@
 {
   "name": "dotnet-build-github-action",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
@@ -31,7 +31,7 @@
     "@vercel/ncc": "0.38.1",
     "husky": "8.0.3",
     "rimraf": "5.0.5",
-    "typescript": "5.2.2"
+    "typescript": "5.3.2"
   },
   "private": true
 }

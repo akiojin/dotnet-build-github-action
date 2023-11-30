@@ -2,8 +2,8 @@ name: Release
 
 on:
   push:
-    tags:
-      - v*
+    branches:
+      - main
 
 jobs:
   Release:
@@ -13,7 +13,20 @@ jobs:
       contents: write
       packages: write
     steps:
-      - uses: actions/checkout@v4
-      - run: gh release create ${{ github.ref_name }} --generate-notes
+      - name: 🔄 Checkout to the branch
+        uses: actions/checkout@v4
+
+      - name: 🔍 Get version from package.json
+        run: |
+          echo "VERSION=$(jq -r .version package.json)" >> $GITHUB_ENV
+  
+      - name: 🏷️ Version Tagging
+        run: |
+          git tag v$VERSION
+          git push origin v$VERSION
+
+      - name: 🚀 GitHub Release
+        run: |
+          gh release create v$VERSION --generate-notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
