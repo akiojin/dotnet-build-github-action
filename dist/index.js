@@ -4126,9 +4126,9 @@ async function Clean(configuration, output) {
     await exec.exec('dotnet', builder.Build());
     core.endGroup();
 }
-async function Build(configuration, framework, additionalArguments, output) {
+async function Exec(command, configuration, framework, additionalArguments, output) {
     const builder = new argument_builder_1.ArgumentBuilder()
-        .Append('build')
+        .Append(command)
         .Append('--configuration', configuration);
     if (core.getInput('project')) {
         builder.Append(core.getInput('project'));
@@ -4165,6 +4165,7 @@ async function Publish(configuration, source, apiKey, output) {
 }
 async function Run() {
     try {
+        const command = core.getInput('command');
         const configuration = core.getInput('configuration');
         const framework = core.getInput('framework');
         const additionalArguments = core.getInput('additional-arguments');
@@ -4172,9 +4173,11 @@ async function Run() {
         if (core.getBooleanInput('clean')) {
             await Clean(configuration, output);
         }
-        await Build(configuration, framework, additionalArguments, output);
         if (core.getBooleanInput('publish')) {
             await Publish(configuration, core.getInput('source'), core.getInput('api-key'), output);
+        }
+        else {
+            await Exec(command, configuration, framework, additionalArguments, output);
         }
     }
     catch (ex) {

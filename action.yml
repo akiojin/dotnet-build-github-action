@@ -17,6 +17,12 @@ inputs:
       Clean workspace before building
     required: false
     default: false
+  command:
+    description: >
+      Specify the command to be executed.
+      By default, `dotnet build` is executed.
+    required: false
+    default: 'build'
   nologo:
     description: >
       No copyright information is displayed.
