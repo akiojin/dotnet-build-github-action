@@ -4129,18 +4129,19 @@ async function Clean(configuration, output) {
 async function Exec(command, configuration, framework, additionalArguments, output) {
     const builder = new argument_builder_1.ArgumentBuilder()
         .Append(command)
-        .Append('--configuration', configuration);
+        .Append('--configuration', configuration)
+        .Append('--verbosity', core.getInput('verbosity'));
     if (core.getInput('project')) {
         builder.Append(core.getInput('project'));
     }
     if (framework) {
         builder.Append('--framework', framework);
     }
-    if (additionalArguments) {
-        builder.Append(additionalArguments);
-    }
     if (output) {
         builder.Append('--output', output);
+    }
+    if (additionalArguments) {
+        builder.Append(additionalArguments);
     }
     core.startGroup('Run dotnet build');
     await exec.exec('dotnet', builder.Build());
