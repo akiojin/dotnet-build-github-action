@@ -41,7 +41,10 @@ fi
 
 git add package.json package-lock.json
 git commit -m "bump: $VERSION"
+git push --follow-tags
+
 git switch main
 git merge develop --no-ff --no-edit
-git switch deveop
 git push --follow-tags
+
+git switch develop
