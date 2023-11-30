@@ -47,4 +47,4 @@ git switch main
 git merge develop --no-ff --no-edit
 git push --follow-tags
 
-git switch deveop
+git switch develop
