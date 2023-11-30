@@ -1,6 +1,11 @@
 name: '.NET NuGet package build'
 description: '.NET NuGet package build & publish GitHub action'
 inputs:
+  additional-arguments:
+    description: >
+      Specify additional arguments to be passed to the build command.
+    required: false
+    default: ''
   api-key:
     description: >
       Specify the API key to be used for delivery.
@@ -22,6 +27,10 @@ inputs:
       Select the target configuration to build.
     required: false
     default: 'Debug'
+  framework:
+    description: >
+      Select the target framework to build.
+    required: false
   output:
     description: >
       Specify the output destination of the built package.
