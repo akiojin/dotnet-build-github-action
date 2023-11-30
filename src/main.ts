@@ -15,7 +15,7 @@ async function Clean(
 		builder.Append('--nologo')
 	}
 
-	if (!!output) {
+	if (output) {
 		builder.Append('--output', output)
 	}
 
@@ -26,17 +26,27 @@ async function Clean(
 
 async function Build(
 	configuration: string,
+	framework: string,
+	additionalArguments: string,
 	output: string): Promise<void>
 {
 	const builder = new ArgumentBuilder()
 		.Append('build')
 		.Append('--configuration', configuration)
 
-	if (!!core.getInput('project')) {
+	if (core.getInput('project')) {
 		builder.Append(core.getInput('project'))
 	}
 
-	if (!!output) {
+	if (framework) {
+		builder.Append('--framework', framework)
+	}
+
+	if (additionalArguments) {
+		builder.Append(additionalArguments)
+	}
+
+	if (output) {
 		builder.Append('--output', output)
 	}
 
@@ -52,7 +62,7 @@ async function Publish(
 	output: string): Promise<void>
 {
 	var nupkg = ''
-	if (!!output) {
+	if (output) {
 		nupkg = path.join(output, '*.nupkg')
 	} else {
 		nupkg = path.join('**', configuration, '*.nupkg')
@@ -73,15 +83,17 @@ async function Run(): Promise<void>
 {
 	try {
 		const configuration = core.getInput('configuration')
+		const framework = core.getInput('framework')
+		const additionalArguments = core.getInput('additional-arguments')
 		const output = core.getInput('output')
 
-		if (!!core.getBooleanInput('clean')) {
+		if (core.getBooleanInput('clean')) {
 			await Clean(configuration, output)
 		}
 
-		await Build(configuration, output)
+		await Build(configuration, framework, additionalArguments, output)
 
-		if (!!core.getBooleanInput('publish')) {
+		if (core.getBooleanInput('publish')) {
 			await Publish(configuration, core.getInput('source'), core.getInput('api-key'), output)
 		}
 	} catch (ex: any) {

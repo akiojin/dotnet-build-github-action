@@ -558,7 +558,7 @@ class OidcClient {
                 .catch(error => {
                 throw new Error(`Failed to get ID Token. \n 
         Error Code : ${error.statusCode}\n 
-        Error Message: ${error.result.message}`);
+        Error Message: ${error.message}`);
             });
             const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
             if (!id_token) {
@@ -4119,21 +4119,27 @@ async function Clean(configuration, output) {
     if (core.getBooleanInput('nologo')) {
         builder.Append('--nologo');
     }
-    if (!!output) {
+    if (output) {
         builder.Append('--output', output);
     }
     core.startGroup('Run dotnet clean');
     await exec.exec('dotnet', builder.Build());
     core.endGroup();
 }
-async function Build(configuration, output) {
+async function Build(configuration, framework, additionalArguments, output) {
     const builder = new argument_builder_1.ArgumentBuilder()
         .Append('build')
         .Append('--configuration', configuration);
-    if (!!core.getInput('project')) {
+    if (core.getInput('project')) {
         builder.Append(core.getInput('project'));
     }
-    if (!!output) {
+    if (framework) {
+        builder.Append('--framework', framework);
+    }
+    if (additionalArguments) {
+        builder.Append(additionalArguments);
+    }
+    if (output) {
         builder.Append('--output', output);
     }
     core.startGroup('Run dotnet build');
@@ -4142,7 +4148,7 @@ async function Build(configuration, output) {
 }
 async function Publish(configuration, source, apiKey, output) {
     var nupkg = '';
-    if (!!output) {
+    if (output) {
         nupkg = path_1.default.join(output, '*.nupkg');
     }
     else {
@@ -4160,12 +4166,14 @@ async function Publish(configuration, source, apiKey, output) {
 async function Run() {
     try {
         const configuration = core.getInput('configuration');
+        const framework = core.getInput('framework');
+        const additionalArguments = core.getInput('additional-arguments');
         const output = core.getInput('output');
-        if (!!core.getBooleanInput('clean')) {
+        if (core.getBooleanInput('clean')) {
             await Clean(configuration, output);
         }
-        await Build(configuration, output);
-        if (!!core.getBooleanInput('publish')) {
+        await Build(configuration, framework, additionalArguments, output);
+        if (core.getBooleanInput('publish')) {
             await Publish(configuration, core.getInput('source'), core.getInput('api-key'), output);
         }
     }
