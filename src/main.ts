@@ -24,14 +24,15 @@ async function Clean(
 	core.endGroup()
 }
 
-async function Build(
+async function Exec(
+	command: string,
 	configuration: string,
 	framework: string,
 	additionalArguments: string,
 	output: string): Promise<void>
 {
 	const builder = new ArgumentBuilder()
-		.Append('build')
+		.Append(command)
 		.Append('--configuration', configuration)
 
 	if (core.getInput('project')) {
@@ -62,6 +63,7 @@ async function Publish(
 	output: string): Promise<void>
 {
 	var nupkg = ''
+
 	if (output) {
 		nupkg = path.join(output, '*.nupkg')
 	} else {
@@ -82,6 +84,7 @@ async function Publish(
 async function Run(): Promise<void> 
 {
 	try {
+		const command = core.getInput('command')
 		const configuration = core.getInput('configuration')
 		const framework = core.getInput('framework')
 		const additionalArguments = core.getInput('additional-arguments')
@@ -91,10 +94,10 @@ async function Run(): Promise<void>
 			await Clean(configuration, output)
 		}
 
-		await Build(configuration, framework, additionalArguments, output)
-
 		if (core.getBooleanInput('publish')) {
 			await Publish(configuration, core.getInput('source'), core.getInput('api-key'), output)
+		} else {
+			await Exec(command, configuration, framework, additionalArguments, output)
 		}
 	} catch (ex: any) {
 		core.setFailed(ex.message);
