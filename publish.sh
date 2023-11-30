@@ -5,6 +5,11 @@ if [ "$#" -ne 1 ] || [[ "$1" != "major" && "$1" != "minor" && "$1" != "patch" &&
   exit 1
 fi
 
+if [ -z "${GITHUB_TOKEN:-}" ]; then
+  echo "Error: Environment variable GITHUB_TOKEN is not set."
+  exit 1
+fi
+
 git pull
 npm run clean
 npm run build
@@ -36,8 +41,7 @@ fi
 
 git add package.json package-lock.json
 git commit -m "bump: $VERSION"
+git switch main
+git merge develop --no-ff --no-edit
+git switch deveop
 git push --follow-tags
-
-if [ "$1" != "prerelease" ]; then
-  gh pr create --base main --head develop --title "bump: $VERSION" --body "bump: $VERSION"
-fi
