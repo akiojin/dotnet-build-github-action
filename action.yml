@@ -23,6 +23,13 @@ inputs:
       By default, `dotnet build` is executed.
     required: false
     default: 'build'
+  verbosity:
+    description: >
+      Specifies the output level of the log.
+      The level can be quiet, minimal, normal, delayed, or diagnostic.
+      The default is normal.
+    required: false
+    default: normal
   nologo:
     description: >
       No copyright information is displayed.
