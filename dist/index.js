@@ -4174,6 +4174,7 @@ async function Run() {
             await Clean(configuration, output);
         }
         if (core.getBooleanInput('publish')) {
+            await Exec(command, configuration, framework, additionalArguments, output);
             await Publish(configuration, core.getInput('source'), core.getInput('api-key'), output);
         }
         else {

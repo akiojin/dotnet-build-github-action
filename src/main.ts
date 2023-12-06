@@ -95,6 +95,7 @@ async function Run(): Promise<void>
 		}
 
 		if (core.getBooleanInput('publish')) {
+			await Exec(command, configuration, framework, additionalArguments, output)
 			await Publish(configuration, core.getInput('source'), core.getInput('api-key'), output)
 		} else {
 			await Exec(command, configuration, framework, additionalArguments, output)
